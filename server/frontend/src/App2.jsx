@@ -3,13 +3,13 @@ import reactLogo from "./assets/react.svg";
 import "./App.css";
 import axios from "axios";
 
-const App = () => {
+const App2 = () => {
   const [count, setCount] = useState(0);
   const [apiResult, setApiResult] = useState("")
   useEffect(() => {
     let mounted = true;
     if (mounted) {
-      axios.get("http://127.0.0.1:3333/api/v1/hello").then((res) => {
+      axios.get("http://127.0.0.1:3333/api/v1/dian").then((res) => {
         if(res.status == 200){
           setApiResult(res.data.message)
           console.log(res);
@@ -46,4 +46,4 @@ const App = () => {
   );
 }
 
-export default App;
+export default App2;

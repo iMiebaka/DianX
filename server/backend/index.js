@@ -1,31 +1,31 @@
-var bodyParser = require('body-parser')
-const express = require("express")
-const app = express()
-var cors = require('cors')
-const PORT = process.env.PORT || 3333
+const express = require("express");
+const app = express();
+var cors = require("cors");
+require('dotenv').config({path: './.env'});
 
 
-app.use(cors())
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
-app.use(express.static('dist'));
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static("dist"));
 
 
-// Handling GET / request
-app.get("/", (req, res, next) => {
-	res.sendFile(__dirname + "/dist/index.html")
-})
+const PORT = process.env.PORT || 3333;
 
-// Handling GET /hello request
-app.get("/hello", (req, res, next) => {
-	res.json({"message":"This is the express server hello page"})
-})
+// Route Setup
+const apiRoute = require("./routes/api/route");
 
-app.get("/dian", (req, res, next) => {
-	res.json({"message":"This is the express server dian page"})
-})
+app.use((req, res, next) => {
+  if(req.url.substring(0, 4) !== '/api'){
+	return res.sendFile(__dirname + "/dist/index.html");
+  }
+  next();
+});
+
+app.use("/api/v1", apiRoute);
+
 
 // Server listening to port 3000
-app.listen((PORT), () => {
-	console.log("RESTApi is Running on", PORT);
-})
+app.listen(PORT, () => {
+  console.log("REST API is Running on", PORT);
+});
