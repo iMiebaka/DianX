@@ -1,8 +1,11 @@
 const express = require("express");
 const app = express();
 var cors = require("cors");
+const { execSync } = require("child_process");
 require('dotenv').config({path: './.env'});
 
+// const output = execSync("hostname -I", { encoding: "utf-8" });
+// console.log(output.split(" "));
 
 app.use(cors());
 app.use(express.json());
