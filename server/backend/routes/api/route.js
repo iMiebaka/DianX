@@ -3,6 +3,7 @@ const router = express.Router();
 
 const apiEndPointPrefix = "/";
 
+
 router.get(apiEndPointPrefix + "hello", (req, res, next) => {
   res.json({ message: "This is the express server hello page" });
 });

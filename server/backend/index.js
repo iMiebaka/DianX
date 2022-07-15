@@ -20,7 +20,7 @@ const apiRoute = require("./routes/api/route");
 
 app.use((req, res, next) => {
   if(req.url.substring(0, 4) !== '/api'){
-	return res.sendFile(__dirname + "/dist/index.html");
+	return res.sendFile(__dirname + "/dist");
   }
   next();
 });

@@ -1,49 +1,19 @@
-import { useState, useEffect } from "react";
-import reactLogo from "./assets/react.svg";
-import "./App.css";
-import axios from "axios";
+import "./assets/css/materialdesignicons.min.css";
+import "./output.css";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { ExistingDevice, ExistingDevices, Home, NewDevice } from "./pages";
 
 const App = () => {
-  const [count, setCount] = useState(0);
-  const [apiResult, setApiResult] = useState("")
-  useEffect(() => {
-    let mounted = true;
-    if (mounted) {
-      axios.get("http://127.0.0.1:3333/api/v1/hello").then((res) => {
-        if(res.status == 200){
-          setApiResult(res.data.message)
-          console.log(res);
-        }
-      });
-    }
-
-    return () => {
-      mounted = false;
-    };
-  }, []);
-
   return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-      <p className="text-xlg">{apiResult}</p>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route exact path="" element={<Home />} />
+        <Route exact path="find" element={<NewDevice />} />
+        <Route exact path="existing-devices" element={<ExistingDevices />} />
+        <Route exact path="existing-device/:id" element={<ExistingDevice />} />
+      </Routes>
+    </BrowserRouter>
   );
-}
+};
 
 export default App;
