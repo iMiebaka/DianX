@@ -1,18 +1,47 @@
+import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Conversation, MediaSender } from "../components";
+import api from "../request/axios";
 
 const ExistingDevice = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const toggleState = useRef();
   const [responsiveToggle, setResponsiveToggle] = useState(false);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const navigateItem = (value) => {
-    navigate("/existing-device/" + value)
-    // setResponsiveToggle(true)
-  }
+    navigate("/existing-device/" + value);
+  };
+
+  const sendMedia = async (data) => {
+    console.log(data.type == "file");
+    if (data.type == "file") {
+      const fileReader = new FileReader();
+      fileReader.onload = async (ev) => {
+        const CHUNK_SIZE = 5000;
+        const chunkCount = ev.target.result.byteLength / CHUNK_SIZE;
+        console.log("Read successfully");
+        const fileName = Math.random() * 1000 + theFile.name;
+        for (let chunkId = 0; chunkId < chunkCount + 1; chunkId++) {
+          const chunk = ev.target.result.slice(
+            chunkId * CHUNK_SIZE,
+            chunkId * CHUNK_SIZE + CHUNK_SIZE
+          );
+          api.defaults.headers.common["content-type"] =
+            "application/octet-stream";
+          api.defaults.headers.common["file-name"] = fileName;
+          await api.post("/send/file", chunk);
+          // console.log(Math.round((chunkId * 100) / chunkCount, 0) + "%");
+        }
+        // console.log(ev.target.result.byteLength);
+      };
+      fileReader.readAsArrayBuffer(theFile);
+    } else {
+      api.post("send/" + data.type, data).then((res) => {
+        console.log(res);
+      });
+    }
+  };
 
   return (
     <div className="relative overflow-hidden w-full h-screen">
@@ -31,7 +60,7 @@ const ExistingDevice = () => {
                 <i className="mdi mdi-arrow-left mdi-36px"></i>
               </button>
               <Conversation />
-              <MediaSender sendItem={null} />
+              <MediaSender sendItem={sendMedia} />
             </div>
             {isLoading ? (
               <div
@@ -73,19 +102,23 @@ const ExistingDevice = () => {
                     <button
                       key={key}
                       onClick={() => navigateItem(key)}
-                      class="border border-blue-300 shadow rounded-md p-4 max-w-sm w-full mx-auto my-1 hover:scale-x-105 duration-500"
+                      className="border border-blue-300 shadow rounded-md p-4 max-w-sm w-full mx-auto my-1 hover:scale-x-105 duration-500"
                     >
-                      <div class=" flex space-x-4 items-center">
-                        <div class="rounded-full bg-slate-300 h-10 w-10 flex items-center justify-center">
+                      <div className=" flex space-x-4">
+                        <div className="rounded-full bg-slate-300 h-10 w-10 flex items-center justify-center">
                           {res.device == "mobile" ? (
                             <i className="mdi mdi-cellphone mdi-36px"></i>
                           ) : (
                             <i className="mdi mdi-desktop-mac mdi-36px"></i>
                           )}
                         </div>
-                        <div class="space-y-2">
-                          <div class="h-2 bg-slate-100 rounded">{res.name}</div>
-                          <div class="h-2 bg-slate-100 rounded"></div>
+                        <div className="flex flex-col items-start space-y-4">
+                          <div className=" h-1 bg-slate-100 rounded">
+                            {res.name}
+                          </div>
+                          <div className="h-1 bg-slate-100 rounded">
+                            connected: 12hour ago
+                          </div>
                         </div>
                       </div>
                     </button>

@@ -43,7 +43,7 @@ const ExistingDevices = () => {
                       key={key}
                       className="border border-blue-100 shadow rounded-md p-4 max-w-sm w-full mx-auto my-1 duration-500 hover:scale-x-105"
                     >
-                      <div className=" flex space-x-4 items-center">
+                      <div className=" flex space-x-4 items-center ">
                         <div className="rounded-full bg-slate-300 h-10 w-10 flex items-center justify-center">
                           {res.device == "mobile" ? (
                             <i className="mdi mdi-cellphone mdi-24px"></i>
@@ -51,9 +51,11 @@ const ExistingDevices = () => {
                             <i className="mdi mdi-desktop-mac mdi-24px"></i>
                           )}
                         </div>
-                        <div className="flex-1 space-y-2">
-                          <div className="h-2 bg-slate-100 rounded">{res.name}</div>
-                          <div className="h-2 bg-slate-100 rounded"></div>
+                        <div class="flex flex-col items-start space-y-4">
+
+                        {/* <div className="flex-1 space-y-2"> */}
+                          <div className="h-1 bg-slate-100 rounded">{res.name}</div>
+                          <div className="h-1 bg-slate-100 rounded"></div>
                         </div>
                       </div>
                     </Link>
