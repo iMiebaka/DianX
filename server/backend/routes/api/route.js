@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const fs = require("fs");
 const sequelize = require("../../models");
+const { deviceId } = require("../../models/config");
 
 
 const apiEndPointPrefix = "/";
@@ -26,6 +27,10 @@ router.post(apiEndPointPrefix + "send/file", (req, res, next) => {
   })
   res.json({ message: "Item recieved" });
   res.end("uploaded!")
+});
+
+router.get(apiEndPointPrefix + "find-host", (req, res, next) => {
+  res.json({ deviceId });
 });
 
 router.get(apiEndPointPrefix + "test-db", async (req, res, next) => {
