@@ -1,9 +1,4 @@
-const { Sequelize, DataTypes } = require("sequelize");
-
-const sequelize = new Sequelize({
-  dialect: "sqlite",
-  storage: "./database.sqlite",
-});
+const { sequelize, DataTypes } = require("./config");
 
 const Device = sequelize.define("device", {
   deviceId: DataTypes.STRING,
@@ -11,28 +6,35 @@ const Device = sequelize.define("device", {
   deviceType: DataTypes.STRING,
 });
 
-const Files = sequelize.define("files", {
+const File = sequelize.define("file", {
   userId: DataTypes.INTEGER,
   fileType: DataTypes.STRING,
   fileName: DataTypes.STRING,
 });
 
-Files.belongsTo(Device);
-sequelize.sync({ force: true });
+// Relationships
+Device.hasMany(File, { as: "files" });
+File.belongsTo(Device);
 
 
-Device.create({
-  deviceId: "test",
-  publicId: "test",
-  deviceType: "test",
-}).then((myDevice) => {
-  console.log(myDevice.device);
-});
+sequelize.sync();
 
-Files.create({
-  userId: 2,
-  fileType: "test type",
-  fileName: "test file",
-});
+// Device.create({
+//   deviceId: "test",
+//   publicId: "test",
+//   deviceType: "test",
+// }).then((myDevice) => {
+//   myDevice.createFile({
+//     userId: 2,
+//     fileType: "test type",
+//     fileName: "test file",
+//   });
+// });
+
+// File.create({
+//   userId: 2,
+//   fileType: "test type",
+//   fileName: "test file",
+// });
 
 module.exports = sequelize;
