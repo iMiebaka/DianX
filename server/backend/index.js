@@ -35,11 +35,23 @@ app.use((req, res, next) => {
 
 app.use("/api/v1", apiRoute);
 
-io.on("connection", () => {
-  /* … */
+io.on("connection", (socket) => {
+  
+  socket.on("join_room", (data) => {
+    socket.join(data);
+  });
+
+  socket.on("leave_room", (data) => {
+    socket.leave(data);
+  });
+
+  socket.on("receive_text", () => {
+    // socket.to(data.room).emit("receive_message", data);
+    console.log("message recieved");
+  });
 });
 
 // Server listening to port 3000
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log("REST API is Running on", PORT);
 });

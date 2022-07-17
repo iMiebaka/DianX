@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Conversation, MediaSender } from "../components";
+import { Conversation, MediaSender, socket } from "../components";
 import api from "../request/axios";
 
 const ExistingDevice = () => {
@@ -16,7 +16,6 @@ const ExistingDevice = () => {
   };
 
   const sendMedia = async (data) => {
-    console.log(data.type == "file");
     if (data.type == "file") {
       const theFile = data.obj;
       const fileReader = new FileReader();
@@ -25,7 +24,7 @@ const ExistingDevice = () => {
         const chunkCount = ev.target.result.byteLength / CHUNK_SIZE;
         console.log("Read successfully");
         const fileName = Math.random() * 1000 + theFile.name;
-        setIsUploading(true)
+        setIsUploading(true);
         for (let chunkId = 0; chunkId < chunkCount + 1; chunkId++) {
           const chunk = ev.target.result.slice(
             chunkId * CHUNK_SIZE,
@@ -38,14 +37,13 @@ const ExistingDevice = () => {
           api.defaults.maxBodyLength = 1000000000;
           await api.post("/send/file", chunk);
           setProgressBar(Math.round((chunkId * 100) / chunkCount, 0) + "%");
-          // console.log(Math.round((chunkId * 100) / chunkCount, 0) + "%");
         }
-        console.log(ev.target.result.byteLength);
-        setIsUploading(false)
+        setIsUploading(false);
       };
       fileReader.readAsArrayBuffer(theFile);
     } else {
-      api.post("/send/text" + data.type, data).then((res) => {
+      socket.emit("receive_text", { data });
+      api.post("/send/text", data).then((res) => {
         console.log(res);
       });
     }
@@ -135,7 +133,7 @@ const ExistingDevice = () => {
                             {res.name}
                           </div>
                           <div className="h-1 bg-slate-100 rounded">
-                            connected: 12hour ago
+                            status: connected
                           </div>
                         </div>
                       </div>

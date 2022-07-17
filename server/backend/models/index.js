@@ -1,11 +1,16 @@
 const { sequelize, DataTypes } = require("./config");
+const fs = require("fs");
 
+const { v4 } = require("uuid");
 const Device = sequelize.define("device", {
   deviceId: DataTypes.STRING,
   publicId: DataTypes.STRING,
   deviceType: DataTypes.STRING,
 });
 
+const DeviceID = sequelize.define("deviceID", {
+  publicId: DataTypes.STRING,
+});
 const File = sequelize.define("file", {
   userId: DataTypes.INTEGER,
   fileType: DataTypes.STRING,
@@ -16,8 +21,22 @@ const File = sequelize.define("file", {
 Device.hasMany(File, { as: "files" });
 File.belongsTo(Device);
 
-
 sequelize.sync();
+
+// Setup Device key
+Device.count().then((count) => {
+  if (count == 0) {
+    console.log(count);
+    const devID = {
+      id: v4(),
+    };
+    fs.writeFile("./deviceId", JSON.stringify(devID), () =>
+      console.log("File Saved")
+    );
+  }
+});
+
+
 
 // Device.create({
 //   deviceId: "test",

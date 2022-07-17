@@ -15,6 +15,7 @@ router.get(apiEndPointPrefix + "dian", (req, res, next) => {
 });
 
 router.post(apiEndPointPrefix + "send/text", (req, res, next) => {
+  console.log(req.body);
   res.json({ message: "Text recieved" });
 });
 

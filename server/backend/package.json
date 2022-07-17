@@ -17,7 +17,8 @@
     "nodemon": "^2.0.19",
     "sequelize": "^6.21.3",
     "socket.io": "^4.5.1",
-    "sqlite3": "^5.0.9"
+    "sqlite3": "^5.0.9",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "electron": "^19.0.8",
