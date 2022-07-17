@@ -7,8 +7,10 @@ import api from "../request/axios";
 const ExistingDevice = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [responsiveToggle, setResponsiveToggle] = useState(false);
-  const navigate = useNavigate();
+  const [progressBar, setProgressBar] = useState("0%");
+  const [isUploading, setIsUploading] = useState(false);
 
+  const navigate = useNavigate();
   const navigateItem = (value) => {
     navigate("/existing-device/" + value);
   };
@@ -16,12 +18,14 @@ const ExistingDevice = () => {
   const sendMedia = async (data) => {
     console.log(data.type == "file");
     if (data.type == "file") {
+      const theFile = data.obj;
       const fileReader = new FileReader();
       fileReader.onload = async (ev) => {
-        const CHUNK_SIZE = 5000;
+        const CHUNK_SIZE = 500000;
         const chunkCount = ev.target.result.byteLength / CHUNK_SIZE;
         console.log("Read successfully");
         const fileName = Math.random() * 1000 + theFile.name;
+        setIsUploading(true)
         for (let chunkId = 0; chunkId < chunkCount + 1; chunkId++) {
           const chunk = ev.target.result.slice(
             chunkId * CHUNK_SIZE,
@@ -30,14 +34,18 @@ const ExistingDevice = () => {
           api.defaults.headers.common["content-type"] =
             "application/octet-stream";
           api.defaults.headers.common["file-name"] = fileName;
+          api.defaults.maxBodyLength = 1000000000;
+          api.defaults.maxBodyLength = 1000000000;
           await api.post("/send/file", chunk);
+          setProgressBar(Math.round((chunkId * 100) / chunkCount, 0) + "%");
           // console.log(Math.round((chunkId * 100) / chunkCount, 0) + "%");
         }
-        // console.log(ev.target.result.byteLength);
+        console.log(ev.target.result.byteLength);
+        setIsUploading(false)
       };
       fileReader.readAsArrayBuffer(theFile);
     } else {
-      api.post("send/" + data.type, data).then((res) => {
+      api.post("/send/text" + data.type, data).then((res) => {
         console.log(res);
       });
     }
@@ -60,6 +68,16 @@ const ExistingDevice = () => {
                 <i className="mdi mdi-arrow-left mdi-36px"></i>
               </button>
               <Conversation />
+              {isUploading && (
+                <div className="w-full bg-gray-100">
+                  <div
+                    className="text-xs text-center text-white bg-purple-700"
+                    style={{ width: progressBar, height: "2px" }}
+                  >
+                    {progressBar}
+                  </div>
+                </div>
+              )}
               <MediaSender sendItem={sendMedia} />
             </div>
             {isLoading ? (

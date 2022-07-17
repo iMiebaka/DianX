@@ -4,9 +4,7 @@ const fs = require("fs");
 const sequelize = require("../../models");
 const { deviceId } = require("../../models/config");
 
-
 const apiEndPointPrefix = "/";
-
 
 router.get(apiEndPointPrefix + "hello", (req, res, next) => {
   res.json({ message: "This is the express server hello page" });
@@ -22,11 +20,11 @@ router.post(apiEndPointPrefix + "send/text", (req, res, next) => {
 
 router.post(apiEndPointPrefix + "send/file", (req, res, next) => {
   const fileName = req.headers["file-name"];
-  req.on("data", chunk => {
-      fs.appendFileSync(fileName, chunk)
-  })
+  req.on("data", (chunk) => {
+    fs.appendFileSync("./media/" + fileName, chunk);
+  });
   res.json({ message: "Item recieved" });
-  res.end("uploaded!")
+  // res.end("uploaded!")
 });
 
 router.get(apiEndPointPrefix + "find-host", (req, res, next) => {
@@ -36,11 +34,11 @@ router.get(apiEndPointPrefix + "find-host", (req, res, next) => {
 router.get(apiEndPointPrefix + "test-db", async (req, res, next) => {
   try {
     await sequelize.authenticate();
-    res.json({'message': 'Connection has been established successfully.'});
+    res.json({ message: "Connection has been established successfully." });
   } catch (error) {
-    res.status(500)
-    res.json({'message': 'Unable to connect to the database:', error});
+    res.status(500);
+    res.json({ message: "Unable to connect to the database:", error });
   }
-})
+});
 
 module.exports = router;

@@ -3,7 +3,7 @@ import api from "../request/axios";
 
 const MediaSender = ({ sendItem }) => {
   const [sendFile, setSendFile] = useState(true);
-
+  const progressBar = useRef()
   useEffect(() => {
     let isMount = true;
     if (isMount) {
@@ -33,11 +33,11 @@ const MediaSender = ({ sendItem }) => {
     file.click();
     file.onchange = () => {
       const data = {
-        type: "text",
+        type: "file",
         obj: file.files[0],
       };
       console.log(file.files[0]);
-      // sendItem(data);
+      sendItem(data);
     };
   };
 
@@ -55,7 +55,7 @@ const MediaSender = ({ sendItem }) => {
   const getBase64 = (theFile) => {
     const fileReader = new FileReader();
     fileReader.onload = async (ev) => {
-      const CHUNK_SIZE = 5000;
+      const CHUNK_SIZE = 500000;
       const chunkCount = ev.target.result.byteLength / CHUNK_SIZE;
       console.log("Read successfully");
       const fileName = Math.random() * 1000 + theFile.name;
@@ -67,8 +67,11 @@ const MediaSender = ({ sendItem }) => {
         api.defaults.headers.common["content-type"] =
           "application/octet-stream";
         api.defaults.headers.common["file-name"] = fileName;
+        api.defaults.maxBodyLength = 1000000000;
+        api.defaults.maxBodyLength = 1000000000;
         await api.post("/send/file", chunk);
-        console.log(Math.round((chunkId * 100) / chunkCount, 0) + "%");
+        setProgressBar(Math.round((chunkId * 100) / chunkCount, 0) + "%");
+        // console.log(Math.round((chunkId * 100) / chunkCount, 0) + "%");
       }
       console.log(ev.target.result.byteLength);
     };
@@ -76,6 +79,11 @@ const MediaSender = ({ sendItem }) => {
   };
   return (
     <div className="bg-gray-100 rounded-lg px-2 flex flex-col md:ml-auto w-full relative md:mt-0">
+      {/* <div class="w-full bg-gray-100">
+        <div ref={progressBar} class="py-0.5 text-xs text-center text-white bg-purple-700" style={{width: "10%"}}>
+          
+        </div>
+      </div> */}
       <div className="mb-2 flex">
         <input
           ref={inputBox}
