@@ -9,11 +9,6 @@ const io = require("socket.io")(server, {
   },
 });
 
-const { execSync } = require("child_process");
-require("dotenv").config({ path: "./.env" });
-
-// const output = execSync("hostname -I", { encoding: "utf-8" });
-// console.log(output.split(" "));
 
 app.use(cors());
 app.use(express.json());

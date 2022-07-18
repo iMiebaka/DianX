@@ -15,6 +15,7 @@ const File = sequelize.define("file", {
   userId: DataTypes.INTEGER,
   fileType: DataTypes.STRING,
   fileName: DataTypes.STRING,
+  size: DataTypes.INTEGER,
 });
 
 // Relationships
@@ -23,20 +24,21 @@ File.belongsTo(Device);
 
 sequelize.sync();
 
-// Setup Device key
-Device.count().then((count) => {
+const setUp = async () => {
+  const count = await Device.count();
+  console.log(count);
   if (count == 0) {
-    console.log(count);
-    const devID = {
+    const data = {
       id: v4(),
-    };
-    fs.writeFile("./deviceId", JSON.stringify(devID), () =>
-      console.log("File Saved")
-    );
+      deviceName: "Jalon"
+    }
+    fs.writeFileSync('./deviceId', JSON.stringify(data), "utf8")
+    console.log("Public Id created");
+    console.log("Successful");
   }
-});
+};
 
-
+// setUp();
 
 // Device.create({
 //   deviceId: "test",
@@ -56,4 +58,4 @@ Device.count().then((count) => {
 //   fileName: "test file",
 // });
 
-module.exports = sequelize;
+module.exports = { sequelize };

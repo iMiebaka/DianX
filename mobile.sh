@@ -1,0 +1,2 @@
+cd mobile
+expo start

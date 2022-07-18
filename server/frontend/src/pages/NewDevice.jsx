@@ -1,17 +1,41 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { HomeStats } from "../components";
+import QRCode from "qrcode";
+import api from "../request/axios";
 
 const NewDevice = () => {
   const [isLoading, setIsLoading] = useState(true);
+  const [qrGist, setQrGist] = useState("");
 
   useEffect(() => {
     let getData = true;
     {
       getData &&
-        setTimeout(() => {
-          setIsLoading(false);
-        }, 10000);
+        api
+          .get("/connect-client")
+          .then((res) => {
+            if (res.status == 200) {
+              const text = JSON.stringify(res.data);
+              try {
+                QRCode.toDataURL(text)
+                  .then((code) => {
+                    setQrGist(code);
+                  })
+                  .catch((err) => {
+                    console.error(err);
+                  });
+              } catch (err) {
+                console.error(err);
+              }
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          })
+          .finally(() => {
+            setIsLoading(false);
+          });
     }
 
     return () => {
@@ -28,52 +52,18 @@ const NewDevice = () => {
             {isLoading ? (
               <div className="lg:w-2/6 md:w-1/2 bg-gray-100 rounded-lg p-8 flex flex-col md:ml-auto w-full mt-10 md:mt-0">
                 <h2 className="animate-pulse text-gray-900 text-lg font-medium title-font mb-3">
-                  Seaching...
+                  Generating Code...
                 </h2>
-                <div class="animate-pulse border border-blue-300 shadow rounded-md p-4 max-w-sm w-full mx-auto">
-                  <div class=" flex space-x-4 items-center">
-                    <div class="rounded-full bg-slate-300 h-10 w-10 flex items-center justify-center">
-                      <i className="mdi mdi-cellphone"></i>
-                    </div>
-                    <div class="flex-1 space-y-2">
-                      <div class="h-2 bg-slate-700 rounded"></div>
-                      <div class="h-2 bg-slate-700 rounded"></div>
-                    </div>
-                  </div>
-                </div>
               </div>
             ) : (
-              <div className="lg:w-2/6 md:w-1/2 bg-gray-100 rounded-lg p-8 flex flex-col md:ml-auto w-full mt-10 md:mt-0">
+              <div className="lg:w-2/6 md:w-1/2 bg-gray-100 rounded-lg p-8 flex flex-col md:ml-auto  w-full mt-10 md:mt-0">
                 <h2 className="text-gray-900 text-lg font-medium title-font mb-3">
-                  Search completed
+                  Scan to Connect
                 </h2>
 
-                {[
-                  { name: "Stonbee", device: "desktop" },
-                  { name: "Matre", device: "mobile" },
-                ].map((res, key) => {
-                  return (
-                    <Link
-                      key={key}
-                      to={"/existing-device/" + key}
-                      class="border border-blue-300 shadow rounded-md p-4 max-w-sm w-full mx-auto my-1 hover:scale-x-105 duration-500"
-                    >
-                      <div class=" flex space-x-4 items-center">
-                        <div class="rounded-full bg-slate-300 h-10 w-10 flex items-center justify-center">
-                          {res.device == "mobile" ? (
-                            <i className="mdi mdi-cellphone mdi-36px"></i>
-                          ) : (
-                            <i className="mdi mdi-desktop-mac mdi-36px"></i>
-                          )}
-                        </div>
-                        <div class="flex-1 space-y-2">
-                          <div class="h-2 bg-slate-100 rounded">{res.name}</div>
-                          <div class="h-2 bg-slate-100 rounded"></div>
-                        </div>
-                      </div>
-                    </Link>
-                  );
-                })}
+                <div className="border border-blue-300 shadow rounded-md p-4 max-w-sm w-full mx-auto my-1 flex justify-center hover:scale-x-105 duration-500">
+                  <img className="w-100 h-100" src={qrGist} alt="" srcSet="" />
+                </div>
               </div>
             )}
           </div>
