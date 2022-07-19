@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   View,
   StyleSheet,
@@ -6,7 +6,13 @@ import {
 import ICONS from "../assets/icons";
 import { HomeButton } from "../components";
 
-const Home = ({ navigation }) => {
+const Home = ({ navigation, database }) => {
+  useEffect(() => {
+    console.log(database);
+    return () => {
+    }
+  }, [])
+  
   return (
     <View>
       <HomeButton navigation={navigation} title={"New User"} icon={ICONS.AddUser} goTo={"NewUser"} />
