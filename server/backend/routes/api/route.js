@@ -42,7 +42,8 @@ router.post(apiEndPointPrefix + "find-host", async (req, res, next) => {
 router.get(apiEndPointPrefix + "connect-client", async (req, res, next) => {
   const output = execSync("hostname -I", { encoding: "utf-8" });
   const obj = fs.readFileSync("./deviceId", "utf-8");
-  res.json({ id: JSON.parse(obj).id, address: ["172.20.0.1"], port: 3333 });
+  const data = { address: ["192.168.43.64"], port: 3333 };
+  res.json({ data });
 });
 
 router.get(apiEndPointPrefix + "test-db", async (req, res, next) => {
@@ -50,7 +51,9 @@ router.get(apiEndPointPrefix + "test-db", async (req, res, next) => {
     await sequelize.authenticate();
     res.json({ message: "Connection has been established successfully." });
   } catch (error) {
-    res.status(500).json({ message: "Unable to connect to the database:", error });
+    res
+      .status(500)
+      .json({ message: "Unable to connect to the database:", error });
   }
 });
 

@@ -6,10 +6,12 @@ const MessageItem = ({ item }) => {
     <View
       style={[
         styles.container,
-        item.from == "self" && { alignItems: "flex-end" },
+        item.from == "self"
+          ? { alignItems: "flex-end" }
+          : { alignItems: "flex-start" },
       ]}
     >
-      <Text style={styles.text}>{item.message}</Text>
+      {item.type == "text" && <Text style={styles.text}>{item.message}</Text>}
     </View>
   );
 };
@@ -17,12 +19,17 @@ const MessageItem = ({ item }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginVertical: 2
+    marginVertical: 2,
   },
   text: {
-    color: "#4D5563",
-    fontSize: 25,
+    // color: "#4E5675",
+    fontSize: 17,
     maxWidth: "80%",
+    elevation: 2,
+    padding: 5,
+    paddingHorizontal: 10,
+    borderRadius: 5,
+    backgroundColor: "white",
   },
 });
 

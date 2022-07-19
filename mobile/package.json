@@ -27,7 +27,8 @@
     "react-native-web": "0.17.7",
     "socket.io-client": "^4.5.1",
     "twrnc": "^3.3.3",
-    "expo-barcode-scanner": "~11.3.0"
+    "expo-barcode-scanner": "~11.3.0",
+    "expo-sqlite": "~10.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"

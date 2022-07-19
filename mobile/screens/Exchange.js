@@ -61,7 +61,7 @@ const Exchange = ({ route, navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F3F4F6",
+    backgroundColor: "#97B0C4",
     flexDirection: "column",
   },
   headerHolder:{
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     alignSelf: "center",
     fontWeight: "bold",
-    color: "gray",
+    color: "white",
   },
   messages: {
     marginHorizontal: 5,

@@ -2,6 +2,7 @@ const { sequelize, DataTypes } = require("./config");
 const fs = require("fs");
 
 const { v4 } = require("uuid");
+
 const Device = sequelize.define("device", {
   deviceId: DataTypes.STRING,
   publicId: DataTypes.STRING,
@@ -15,6 +16,7 @@ const File = sequelize.define("file", {
   userId: DataTypes.INTEGER,
   fileType: DataTypes.STRING,
   fileName: DataTypes.STRING,
+  publicId: DataTypes.STRING,
   size: DataTypes.INTEGER,
 });
 
@@ -22,7 +24,7 @@ const File = sequelize.define("file", {
 Device.hasMany(File, { as: "files" });
 File.belongsTo(Device);
 
-sequelize.sync();
+sequelize.sync({force: true});
 
 const setUp = async () => {
   const count = await Device.count();

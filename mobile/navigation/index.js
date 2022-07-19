@@ -9,7 +9,7 @@ const Navigation = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="Home" component={Home} options={{ title: 'Home' }} />
+        <Stack.Screen name="Home" component={Home} database={"Hello"}  options={{ title: 'Home' }} />
         <Stack.Screen name="NewUser" component={NewUser} options={{ title: 'New User' }} />
         <Stack.Screen name="ExistingUser" component={ExistingUser} options={{ title: 'Existing User' }} />
         <Stack.Screen name="Settings" component={Settings} options={{ title: 'Settings' }} />

@@ -6,7 +6,7 @@ import ICONS from "../assets/icons";
 
 const NewUser = ({ navigation }) => {
   const [hasPermission, setHasPermission] = useState(null),
-    [scanned, setScanned] = useState(false),
+    [scanned, setScanned] = useState(true),
     [checkingState, setCheckingState] = useState(false);
   useEffect(() => {
     (async () => {
@@ -44,7 +44,7 @@ const NewUser = ({ navigation }) => {
                 name={"Misty"}
                 status={"active"}
                 icon={ICONS.desktop}
-                route={"192.168.42.205:3333"}
+                route={"192.168.43.64:3333"}
                 goTo="Exchange"
               />
             </ScrollView>
