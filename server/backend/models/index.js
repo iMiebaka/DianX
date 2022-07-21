@@ -1,47 +1,50 @@
-const { sequelize, DataTypes } = require("./config");
-const fs = require("fs");
-
 const { v4 } = require("uuid");
+const { sequelize } = require("./config");
+const fs = require("fs");
+const Files = require("./Files");
+const Device = require("./Device");
+const DeviceID = require("./DeviceID");
 
-const Device = sequelize.define("device", {
-  deviceId: DataTypes.STRING,
-  publicId: DataTypes.STRING,
-  deviceType: DataTypes.STRING,
-});
+// const Device = sequelize.define("device", {
+//   deviceName: DataTypes.STRING,
+//   publicId: DataTypes.STRING,
+//   deviceType: DataTypes.STRING,
+// });
 
-const DeviceID = sequelize.define("deviceID", {
-  publicId: DataTypes.STRING,
-});
-const File = sequelize.define("file", {
-  userId: DataTypes.INTEGER,
-  fileType: DataTypes.STRING,
-  fileName: DataTypes.STRING,
-  publicId: DataTypes.STRING,
-  size: DataTypes.INTEGER,
-});
+// const DeviceID = sequelize.define("deviceID", {
+//   publicId: DataTypes.STRING,
+//   deviceName: {
+//     type: DataTypes.STRING,
+//     defaultValue: "Dian-Exchange-PC",
+//   },
+// });
+// const File = sequelize.define("file", {
+//   fileType: DataTypes.STRING,
+//   fileName: DataTypes.STRING,
+//   publicId: DataTypes.STRING,
+//   size: DataTypes.INTEGER,
+// });
 
 // Relationships
-Device.hasMany(File, { as: "files" });
-File.belongsTo(Device);
+Device.hasMany(Files, { as: "files" });
+Files.belongsTo(Device);
 
-sequelize.sync({force: true});
+sequelize.sync();
 
 const setUp = async () => {
-  const count = await Device.count();
-  console.log(count);
+  const count = await DeviceID.count();
   if (count == 0) {
     const data = {
-      id: v4(),
-      deviceName: "Jalon"
-    }
-    fs.writeFileSync('./deviceId', JSON.stringify(data), "utf8")
-    console.log("Public Id created");
-    console.log("Successful");
+      publicId: v4(),
+      deviceName: "Dian-Exchange-PC",
+    };
+    DeviceID.create(data);
+    fs.writeFileSync("./deviceId", JSON.stringify(data), "utf8");
+    console.log("Public Id created Successful");
   }
 };
 
-// setUp();
-
+setUp();
 // Device.create({
 //   deviceId: "test",
 //   publicId: "test",
@@ -60,4 +63,4 @@ const setUp = async () => {
 //   fileName: "test file",
 // });
 
-module.exports = { sequelize };
+module.exports = { Files, Device, DeviceID };

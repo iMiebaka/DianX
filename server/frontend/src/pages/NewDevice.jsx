@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { HomeStats } from "../components";
+import { Link, useNavigate } from "react-router-dom";
+import { HomeStats, socket } from "../components";
 import QRCode from "qrcode";
 import api from "../request/axios";
 
 const NewDevice = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [qrGist, setQrGist] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     let getData = true;
@@ -42,6 +43,19 @@ const NewDevice = () => {
       getData = false;
     };
   }, []);
+
+  useEffect(() => {
+    let getData = true;
+    {
+      getData &&
+        socket.on("make_handshake", (data) => {
+          console.log(data);
+        });
+    }
+    return () => {
+      getData = false;
+    };
+  }, [socket]);
 
   return (
     <div className="relative overflow-hidden w-full h-screen">

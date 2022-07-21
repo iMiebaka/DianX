@@ -22,7 +22,10 @@ const styles = StyleSheet.create({
   containerMain: {
     flexDirection: "row",
     alignItems: "center",
-    padding: 10
+    padding: 10,
+    backgroundColor: "white",
+    marginVertical: 5,
+    marginHorizontal: 5
   },
   containerImage: {
     width: imageDimension,

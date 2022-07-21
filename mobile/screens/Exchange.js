@@ -49,6 +49,7 @@ const Exchange = ({ route, navigation }) => {
           onChangeText={setMessageValue}
           value={messageValue}
           style={styles.input}
+          multiline
         />
         <TouchableOpacity onPress={messageChange} style={styles.senderBtn}>
           <Image style={styles.senderIcon} source={ICONS.sendMessage} />
@@ -61,7 +62,7 @@ const Exchange = ({ route, navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#97B0C4",
+    backgroundColor: "#CDD5E1",
     flexDirection: "column",
   },
   headerHolder:{

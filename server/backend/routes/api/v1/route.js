@@ -1,9 +1,22 @@
 const express = require("express");
 const router = express.Router();
 const fs = require("fs");
-const sequelize = require("../../models");
-const { execSync } = require("child_process");
-require("dotenv").config({ path: "./.env" });
+const { DeviceID, sequelize } = require("../../../models");
+var network = require("network");
+
+var address = [];
+network.get_interfaces_list(function (err, ip) {
+  if (!err) {
+    ip.forEach((element) => {
+      {
+        element.ip_address != undefined &&
+          address.push(element.ip_address + ":" + 3333);
+      }
+    });
+  } else {
+    console.log(err);
+  }
+});
 
 const apiEndPointPrefix = "/";
 
@@ -30,20 +43,19 @@ router.post(apiEndPointPrefix + "send/file", (req, res, next) => {
 });
 
 router.post(apiEndPointPrefix + "find-host", async (req, res, next) => {
-  const obj = fs.readFileSync("./deviceId", "utf-8");
-  const id = JSON.parse(obj).id;
-  if (id == req.body.id) {
-    res.json({ status: "success", id });
-  } else {
-    res.status(404).json({ status: "error" });
-  }
+  const url =  req.body.url
+  const socket = req.app.get("socket");
+  socket.emit("make_handshake", { data: url });
+  const device = await DeviceID.findOne();
+  res.json({
+    status: "success",
+    publicId: device.publicId,
+    deviceName: device.deviceName,
+  });
 });
 
-router.get(apiEndPointPrefix + "connect-client", async (req, res, next) => {
-  const output = execSync("hostname -I", { encoding: "utf-8" });
-  const obj = fs.readFileSync("./deviceId", "utf-8");
-  const data = { address: ["192.168.43.64"], port: 3333 };
-  res.json({ data });
+router.get(apiEndPointPrefix + "connect-client", (req, res, next) => {
+  res.json({ data: address });
 });
 
 router.get(apiEndPointPrefix + "test-db", async (req, res, next) => {
