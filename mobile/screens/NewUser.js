@@ -38,18 +38,21 @@ const NewUser = ({ navigation }) => {
   }, []);
 
   const handleBarCodeScanned = async ({ type, data }) => {
-    setScanned(true);
     setCheckingState(true);
-    alert(`${data}`);
-    const url = JSON.parse(data).data.address;
+    setScanned(true);
+    // alert(`${data}`);
+    const url = JSON.parse(data).data;
     console.log(url);
     for (let index = 0; index < url.length; index++) {
       const element = url[index];
-      const res = await api(element).post("/find-host");
+      const res = await api(element).post("/find-host", { url: comCode });
       if (res.status == 200) {
-        socket(element).emit("make_handshake", comCode);
         socket(element).emit("join_room", comCode);
-        console.log(res);
+        setCheckingState(false);
+        setScanned(false);
+        navigation.navigate("Exchange", {route : res.data.publicId, name:res.data.deviceName})
+        console.log(res.data);
+        return
       }
     }
   };

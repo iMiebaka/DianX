@@ -9,6 +9,7 @@ Device.init(
     deviceName: DataTypes.STRING,
     publicId: DataTypes.STRING,
     deviceType: DataTypes.STRING,
+    communicationId: DataTypes.STRING,
   },
   {
     sequelize,

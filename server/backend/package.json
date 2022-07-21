@@ -5,7 +5,8 @@
   "main": "nodemon index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon"
+    "start": "nodemon",
+    "ui": "electron start.js"
   },
   "author": "Miebaka Iwarri",
   "license": "ISC",

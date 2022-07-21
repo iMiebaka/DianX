@@ -58,6 +58,13 @@ body {
   /* 2 */
 }
 
+
+.bg-app {
+  background-image: url('./assets/images/undraw_file_bundle_re_6q1e.svg');
+background-repeat: no-repeat;
+background-position: center;
+background-size: contain;
+}
 /*
 1. Add the correct height in Firefox.
 2. Correct the inheritance of border color in Firefox. (https://bugzilla.mozilla.org/show_bug.cgi?id=190655)

@@ -15,8 +15,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static("dist"));
 app.use(express.static("media"));
 
-const PORT = process.env.PORT || 3333;
-
+const PORT = process.env.PORT || 9339;
+app.set("PORT", PORT);
 // Route Setup
 const apiRoutev1 = require("./routes/api/v1/route");
 
@@ -34,8 +34,7 @@ io.on("connection", (socket) => {
   app.set("socket", socket);
 
   socket.on("join_room", (data) => {
-    // socket.join(data);
-    console.log(data);
+    socket.join(data);
   });
 
   socket.on("make_handshake", (data) => {});
@@ -45,7 +44,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("receive_text", () => {
-    // socket.to(data.room).emit("receive_message", data);
+    socket.to(data.room).emit("receive_message", data);
     console.log("message recieved");
   });
 
