@@ -1,5 +1,4 @@
 import copy from "copy-to-clipboard";
-import IMAGE from "../assets/images";
 
 const TextConversation = ({ data }) => {
   return (

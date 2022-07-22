@@ -1,0 +1,19 @@
+.backg {
+background-image: url("./freeimg_91119713freejpg850.jpg");
+background-repeat: no-repeat;
+background-size: cover;
+border-radius: 1rem;
+/* background-position: center; */
+}
+h1{
+    color: antiquewhite;
+    font-size: 7rem;
+    margin-top: -1rem;
+    text-align: center;
+}
+p{
+    color: antiquewhite;
+    font-size: 3rem;
+    margin-top: -5rem;
+    text-align: center;
+}

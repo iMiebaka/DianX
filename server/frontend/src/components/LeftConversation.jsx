@@ -1,5 +1,3 @@
-import copy from "copy-to-clipboard";
-import IMAGE from "../assets/images";
 import TextConversation from "./TextConversation";
 
 const LeftConversation = ({ data }) => {
