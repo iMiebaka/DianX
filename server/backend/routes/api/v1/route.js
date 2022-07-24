@@ -2,7 +2,8 @@ const express = require("express");
 const router = express.Router();
 const fs = require("fs");
 const network = require("network");
-const { DeviceID, Device, sequelize, Files } = require("../../../models");
+const { DeviceID, Device, Files } = require("../../../models");
+const { sequelize } = require("../../../models/config");
 
 const apiEndPointPrefix = "/";
 
@@ -18,6 +19,8 @@ router.get(apiEndPointPrefix + "device-details", async (req, res, next) => {
 
 router.get(apiEndPointPrefix + "get-conversation", async (req, res, next) => {
   const deviceId = req.query.deviceid;
+  // const socket = req.app.get("socket");
+  // socket.to("3c933885-2155-4c30-be73-ccb09974c53f").emit("receive_message", {});
   const files = await Files.findAll({ where: { communicationId: deviceId } });
   // const data = {
   //   fileType: files.fileType,
@@ -31,7 +34,7 @@ router.get(apiEndPointPrefix + "get-conversation", async (req, res, next) => {
 });
 
 router.post(apiEndPointPrefix + "send/text", (req, res, next) => {
-  res.statusCode(201).json({ message: "Text recieved" });
+  res.status(201).json({ message: "Text recieved" });
 });
 
 router.post(apiEndPointPrefix + "send/file", (req, res, next) => {
@@ -48,6 +51,7 @@ router.get(apiEndPointPrefix + "find-hosts", async (req, res, next) => {
     device,
   });
 });
+
 router.post(apiEndPointPrefix + "find-host", async (req, res, next) => {
   const socket = req.app.get("socket");
   socket.emit("make_handshake", { data: req.body.url });
@@ -66,7 +70,7 @@ router.get(apiEndPointPrefix + "connect-client", (req, res, next) => {
       ip.forEach((element) => {
         {
           element.ip_address != undefined &&
-            address.push(element.ip_address + ":" + req.app.get("PORT"));
+            address.push(element.ip_address + ":" + req.app.get("LISTENING"));
         }
       });
       res.json({ data: address });
@@ -77,6 +81,7 @@ router.get(apiEndPointPrefix + "connect-client", (req, res, next) => {
 });
 
 router.get(apiEndPointPrefix + "test-db", async (req, res, next) => {
+  console.log();
   try {
     await sequelize.authenticate();
     res.json({ message: "Connection has been established successfully." });
@@ -84,6 +89,17 @@ router.get(apiEndPointPrefix + "test-db", async (req, res, next) => {
     res
       .status(500)
       .json({ message: "Unable to connect to the database:", error });
+  }
+});
+
+router.get(apiEndPointPrefix + "test-socket", async (req, res, next) => {
+  try {
+    const socket = req.app.get("socket");
+    socket.broadcast.emit("send_message", { data: "334acd28-7496-451a-9896-5dbb10310701" });
+    await sequelize.authenticate();
+    res.json({ message: "Socket tested" });
+  } catch (error) {
+    res.status(500).json({ message: "Unable to init socket:", error });
   }
 });
 

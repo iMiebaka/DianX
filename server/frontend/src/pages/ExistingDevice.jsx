@@ -4,38 +4,57 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Conversation, MediaSender, Sidebar } from "../components";
 import { useSelector } from "react-redux";
 import { socket, api } from "../request";
+import { v4 } from "uuid";
+import QRCode from "qrcode";
 
 const ExistingDevice = () => {
   const userDetails = useSelector((state) => state.userDetail);
   const [isLoading, setIsLoading] = useState(false),
-    [responsiveToggle, setResponsiveToggle] = useState(false),
+    // [responsiveToggle, setResponsiveToggle] = useState(false),
     [progressBar, setProgressBar] = useState("0%"),
     [isUploading, setIsUploading] = useState(false),
+    [qrGist, setQrGist] = useState(""),
     [conversation, setConversation] = useState([]);
 
   const { id } = useParams();
   useEffect(() => {
-    let mounted = true;
+    let getData = true;
     {
-      mounted &&
-        api.get("/get-conversation?deviceid=" + id).then((res) => {
+      getData &&
+        QRCode.toDataURL('{ data: ["127.0.0.1"] }').then((code) => {
+          setQrGist(code);
+        });
+      api
+        .get("/connect-client")
+        .then((res) => {
           if (res.status == 200) {
-            setConversation(res.data);
+            const text = JSON.stringify(res.data);
+            try {
+              QRCode.toDataURL(text)
+                .then((code) => {
+                  setQrGist(code);
+                  // console.log(text);
+                })
+                .catch((err) => {
+                  console.error(err);
+                });
+            } catch (err) {
+              console.error(err);
+            }
           }
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+        .finally(() => {
+          setIsLoading(false);
         });
     }
+
     return () => {
-      mounted = false;
+      getData = false;
     };
   }, []);
-
-  useEffect(() => {
-    socket.on("receive_message", (data) => {});
-    return () => {
-      socket.emit("leave_room", id);
-      socket.close();
-    };
-  }, [socket]);
 
   const sendMedia = async (data) => {
     if (data.type == "file") {
@@ -64,31 +83,64 @@ const ExistingDevice = () => {
       };
       fileReader.readAsArrayBuffer(theFile);
     } else {
-      socket.emit("receive_text", { data, room: id });
-      api.post("/send/text", data).then((res) => {
-        console.log(res);
-      });
+      const data_ = {
+        id: v4(),
+        message: data.obj,
+        type: data.type,
+        userId: userDetails.deviceId,
+        room: id,
+      };
+      console.log(data_);
+      socket.emit("receive_text", data_);
+      // api.post("/send/text", data_).then((res) => {
+      //   console.log(res);
+      // });
     }
   };
+
+  useEffect(() => {
+    let mounted = true;
+    {
+      mounted &&
+        api.get("/get-conversation?deviceid=" + id).then((res) => {
+          if (res.status == 200) {
+            setConversation(res.data);
+          }
+        });
+      socket.emit("join_room", id);
+    }
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    const listener = (message) => {
+      console.log(message);
+    };
+    socket.on("send_message", listener);
+
+    return () => socket.off("send_message", listener);
+  }, ["send_message"]);
 
   return (
     <main className="relative flex flex-row">
       <Sidebar />
       <div className="relative overflow-hidden w-full h-screen">
         <div className="container">
-          <section className="text-gray-600 body-font h-auto ">
-            <div className="px-5 py-24 mx-auto flex ">
+          <section className="text-gray-600 body-font h-auto  md:-mt-10">
+            <div className="px-5 py-24 mx-auto flex">
               <div
-                className="lg:w-3/5 bg-gray-100 rounded-lg lg:flex flex-col md:ml-auto w-full mt-10 md:mt-0 
+                className="lg:w-3/5 bg-gray-100 rounded-lg lg:flex flex-col md:ml-auto w-full lg:mt-0 md:-mt-10
               relative bg-opacity-60 backdrop-filter backdrop-blur-lg"
-                hidden={!responsiveToggle}
+                // hidden={!responsiveToggle}
               >
-                <button
+                {/* <button
                   onClick={() => setResponsiveToggle(false)}
                   className="block lg:hidden self-start m-0 p-0"
                 >
                   <i className="mdi mdi-arrow-left mdi-36px"></i>
-                </button>
+                </button> */}
                 <Conversation data={conversation} />
                 {isUploading && (
                   <div className="w-full bg-gray-100">
@@ -104,7 +156,7 @@ const ExistingDevice = () => {
               </div>
               {isLoading ? (
                 <div
-                  className="lg:w-2/6 md:w-1/2 bg-gray-100 rounded-lg p-8 flex flex-col md:ml-auto w-full mt-10 md:mt-0 
+                  className="lg:w-2/6 md:w-0 sm:w-0  bg-gray-100 rounded-lg p-8 flex flex-col md:ml-auto w-full mt-10 md:mt-0 
               relative 
               "
                 >
@@ -125,10 +177,10 @@ const ExistingDevice = () => {
                 </div>
               ) : (
                 <div
-                  className="lg:w-2/6 md:w-1/2 bg-gray-100 rounded-lg p-8 flex flex-col md:ml-auto w-full mt-10 md:mt-0
+                  className="lg:w-2/6 md:hidden sm:hidden bg-gray-100 rounded-lg p-8 lg:flex flex-col hidden md:ml-auto mt-10 md:mt-0
 
                "
-                  hidden={responsiveToggle}
+                  // hidden={responsiveToggle}
                 >
                   <h2 className="text-gray-900 text-lg font-medium title-font mb-3">
                     Paired Device
@@ -160,6 +212,14 @@ const ExistingDevice = () => {
                       </div>
                     );
                   })}
+                  {/* <div className="border border-blue-300 shadow rounded-md p-4 max-w-sm w-full mx-auto my-1 flex justify-center hover:scale-x-105 duration-500">
+                    <img
+                      className="w-100 h-100"
+                      src={qrGist}
+                      alt=""
+                      srcSet=""
+                    />
+                  </div> */}
                 </div>
               )}
             </div>

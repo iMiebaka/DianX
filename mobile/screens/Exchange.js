@@ -7,33 +7,59 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
-import React, { useState } from "react";
-import { io } from "socket.io-client";
+import React, { useEffect, useState } from "react";
 import ICONS from "../assets/icons";
 import { MessageItem } from "../components";
 import uuid from "react-native-uuid";
+import { useSelector } from "react-redux";
+import { socket } from "../request";
 
 const Exchange = ({ route, navigation }) => {
-  const socket = io("ws://" + route.params.route, {
-    reconnectionDelayMax: 10000,
-    transports: ["websocket"],
-  });
-  const [messageValue, setMessageValue] = useState("");
-  const [messages, setMessages] = useState([
-    { id: uuid.v4(), message: "hsjksdjk", type: "text", from: "self" },
-    { id: uuid.v4(), message: "sdjkjfk", type: "text", from: "self" },
-    { id: uuid.v4(), message: "sdjkjfk", type: "text", from: "user" },
-  ]);
+  const userDetails = useSelector((state) => state.userDetail);
+
+  const [messageValue, setMessageValue] = useState(""),
+    [messages, setMessages] = useState([]);
+  //   { id: uuid.v4(), message: "hsjksdjk", type: "text", from: "self" },
+  //   { id: uuid.v4(), message: "sdjkjfk", type: "text", from: "self" },
+  //   { id: uuid.v4(), message: "sdjkjfk", type: "text", from: "user" },
+  // ]);
   const messageChange = () => {
     const data = {
       id: uuid.v4(),
       message: messageValue,
+      room: route.params.connectionId,
       type: "text",
-      from: "self",
+      userId: route.params.route,
     };
-    setMessages([...messages, data]);
-    setMessageValue("")
+    socket(route.params.url).emit("receive_text", data);
+    // setMessages([...messages, data]);
+    setMessageValue("");
   };
+  // useEffect(() => {
+  //   let mounted = true;
+  //   {
+  //     mounted &&
+  //       socket(route.params.url).on("send_message", (data) => {
+  //         console.log(data);
+  //       });
+  //   }
+  //   return () => {
+  //     mounted = false;
+  //   };
+  // }, [socket]);
+  useEffect(() => {
+    const listener = (message) => {
+      console.log(message);
+    };
+    socket(route.params.url).on("send_message", listener);
+
+    return () => socket.off("send_message", listener);
+  }, ["send_message"]);
+
+  useEffect(() => {
+    socket(route.params.url).emit("join_room", route.params.connectionId);
+  }, []);
+
   return (
     <View style={styles.container}>
       <View style={styles.headerHolder}>
@@ -41,7 +67,7 @@ const Exchange = ({ route, navigation }) => {
       </View>
       <ScrollView style={styles.messages}>
         {messages.map((item) => {
-          return <MessageItem key={item.id} item={item} />;
+          return <MessageItem key={item.id} item={item} user={userDetails} />;
         })}
       </ScrollView>
       <View style={styles.senderZone}>
@@ -65,11 +91,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#CDD5E1",
     flexDirection: "column",
   },
-  headerHolder:{
-      borderBottomWidth: .4,
-      width: "100%",
-      borderBottomColor: "gray",
-      padding: 5
+  headerHolder: {
+    borderBottomWidth: 0.4,
+    width: "100%",
+    borderBottomColor: "gray",
+    padding: 5,
   },
   header: {
     fontSize: 20,

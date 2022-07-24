@@ -1,2 +1,2 @@
 const AVAILABLE = "AVAILABLE";
-export default AVAILABLE
+export { AVAILABLE };

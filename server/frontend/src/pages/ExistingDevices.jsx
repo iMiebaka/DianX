@@ -3,15 +3,18 @@ import { Link } from "react-router-dom";
 import { HomeStats, Sidebar } from "../components";
 import { api } from "../request";
 
+
 const ExistingDevices = () => {
-  const [isLoading, setIsLoading] = useState(false),
+  const [isLoading, setIsLoading] = useState(true),
     [pairedDevice, setPairedDevice] = useState([]);
   useEffect(() => {
     api.get("/find-hosts").then((res) => {
       if (res.status == 200) {
         setPairedDevice(res.data);
       }
-    });
+    }).finally(() => {
+      setIsLoading(false)
+    })
   }, []);
   return (
     <main className="relative flex flex-row">

@@ -1,3 +1,5 @@
 const initDeviceId = `INSERT INTO deviceIDs (publicId, deviceName) values (?,?)`;
 
-export { initDeviceId };
+const getDeviceId = `SELECT * deviceIDs`;
+
+export { initDeviceId, getDeviceId};

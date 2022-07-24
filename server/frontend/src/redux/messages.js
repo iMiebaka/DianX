@@ -1,2 +1,3 @@
 const AVAILABLE = "AVAILABLE";
-export default AVAILABLE
+const STATS = "STATS";
+export  {AVAILABLE, STATS}

@@ -1,11 +1,8 @@
 import { combineReducers } from "redux";
+import { getDeviceId } from "../controllers/deviceId";
 import AVAILABLE from "./messages";
 
-{
-  localStorage.getItem("dian-xchange") == null &&
-    localStorage.setItem("dian-xchange", "{}");
-}
-const initialState = JSON.parse(localStorage.getItem("dian-xchange"));
+const initialState = getDeviceId;
 
 const userDetail = (state = initialState, action) => {
   const { type, payload } = action;

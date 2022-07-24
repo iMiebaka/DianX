@@ -25,7 +25,7 @@ const NewDevice = () => {
               QRCode.toDataURL(text)
                 .then((code) => {
                   setQrGist(code);
-                  console.log(text);
+                  // console.log(text);
                 })
                 .catch((err) => {
                   console.error(err);
@@ -49,16 +49,15 @@ const NewDevice = () => {
   }, []);
 
   useEffect(() => {
-    let getData = true;
+    let mounted = true;
     {
-      getData &&
+      mounted &&
         socket.on("make_handshake", (data) => {
-          socket.emit("join_room", data.data);
           navigateItem(data.data);
         });
     }
     return () => {
-      getData = false;
+      mounted = false;
     };
   }, [socket]);
 

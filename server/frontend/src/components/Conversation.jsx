@@ -6,7 +6,7 @@ const Conversation = () => {
   const data = ""
   return (
     <div
-      className=" bg-gray-100 rounded-lg lg:flex flex-col md:ml-auto w-full mt-10 md:mt-0 overflow-y-scroll 
+      className=" bg-gray-100 rounded-t-lg py-2 lg:flex flex-col md:ml-auto w-full md:mt-0 overflow-y-scroll 
     "
       style={{ maxHeight: "75vh" }}
     >
@@ -21,8 +21,8 @@ const Conversation = () => {
       <LeftConversation data={data} />
       <RightConversation data={data} />
       <RightConversation data={data} />
-      {/* <RightConversation data={data} />
-      <RightConversation data={data} /> */}
+      <RightConversation data={data} />
+      <RightConversation data={data} />
     </div>
   );
 };

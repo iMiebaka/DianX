@@ -78,7 +78,7 @@ const MediaSender = ({ sendItem }) => {
     fileReader.readAsArrayBuffer(theFile);
   };
   return (
-    <div className="bg-gray-100 rounded-lg px-2 flex flex-col md:ml-auto w-full relative md:mt-0">
+    <div className="bg-gray-100 rounded-b-lg px-2 flex flex-col md:ml-auto w-full relative md:mt-0">
       {/* <div class="w-full bg-gray-100">
         <div ref={progressBar} class="py-0.5 text-xs text-center text-white bg-purple-700" style={{width: "10%"}}>
           

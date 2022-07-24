@@ -16,7 +16,7 @@ app.use(express.static("dist"));
 app.use(express.static("media"));
 
 const PORT = process.env.PORT || 9339;
-app.set("PORT", PORT);
+
 // Route Setup
 const apiRoutev1 = require("./routes/api/v1/route");
 
@@ -38,20 +38,21 @@ io.on("connection", (socket) => {
   });
 
   socket.on("make_handshake", (data) => {});
+  // socket.on("send_message", (data) => {});
 
   socket.on("leave_room", (data) => {
     socket.leave(data);
   });
 
-  socket.on("receive_text", () => {
-    socket.to(data.room).emit("receive_message", data);
+  socket.on("receive_text", (data) => {
+    socket.broadcast.emit("send_message", data);
+    // socket.to(data.room).emit("receive_message", data);
     console.log("message recieved");
   });
-
 });
 
 // Server listening to port 3000
 server.listen(PORT, () => {
   console.log("REST API is Running on", PORT);
+  app.set("LISTENING", PORT);
 });
-

@@ -8,6 +8,7 @@ const api = (url) =>
       "Device-Type": DEVICE_PRINT,
       "Content-Type": "application/json",
     },
+    timeout: 2000,
   });
 
 export default api;

@@ -1,11 +1,10 @@
 import { View, Text, StyleSheet, Button, ScrollView } from "react-native";
 import React, { useState, useEffect } from "react";
 import { BarCodeScanner } from "expo-barcode-scanner";
-import { DeviceMenu, socket, Spinner } from "../components";
+import { DeviceMenu, Spinner } from "../components";
 import uuid from "react-native-uuid";
-import ICONS from "../assets/icons";
 import * as SQLite from "expo-sqlite";
-import api from "../request/axios";
+import { api, socket } from "../request";
 const db = SQLite.openDatabase("db.testDb");
 
 const NewUser = ({ navigation }) => {
@@ -13,7 +12,8 @@ const NewUser = ({ navigation }) => {
     [scanned, setScanned] = useState(false),
     [checkingState, setCheckingState] = useState(false),
     [userDetail, setUserDetail] = useState({}),
-    [comCode, setComCode] = useState(uuid.v4());
+    [comCode, setComCode] = useState(uuid.v4()),
+    [statusText, setStatusText] = useState("Paring");
   useEffect(() => {
     (async () => {
       const { status } = await BarCodeScanner.requestPermissionsAsync();
@@ -42,18 +42,26 @@ const NewUser = ({ navigation }) => {
     setScanned(true);
     // alert(`${data}`);
     const url = JSON.parse(data).data;
-    console.log(url);
     for (let index = 0; index < url.length; index++) {
       const element = url[index];
-      const res = await api(element).post("/find-host", { url: comCode });
-      if (res.status == 200) {
-        socket(element).emit("join_room", comCode);
-        setCheckingState(false);
-        setScanned(false);
-        navigation.navigate("Exchange", {route : res.data.publicId, name:res.data.deviceName})
-        console.log(res.data);
-        return
-      }
+      try {
+        setStatusText(`Paring ${index + 1}/${url.length}`);
+        const res = await api(element).post("/find-host", { url: comCode });
+        if (res.status == 200) {
+          setStatusText(`Paring Complete`);
+          setCheckingState(false);
+          setScanned(false);
+          // socket(element).emit("make_handshake", { data: comCode });
+          navigation.navigate("Exchange", {
+            route: res.data.publicId,
+            name: res.data.deviceName,
+            connectionId: comCode,
+            url: element,
+          });
+          // console.log(res.data);
+          return;
+        }
+      } catch {}
     }
   };
 
@@ -71,7 +79,7 @@ const NewUser = ({ navigation }) => {
           <View
             style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
           >
-            <Spinner title={"Pairing"} />
+            <Spinner title={statusText} />
           </View>
         ) : (
           <View>
@@ -80,14 +88,14 @@ const NewUser = ({ navigation }) => {
               onPress={() => setScanned(false)}
             />
             <ScrollView>
-              <DeviceMenu
+              {/* <DeviceMenu
                 navigation={navigation}
                 name={"Misty"}
                 status={"active"}
                 icon={ICONS.desktop}
                 route={"192.168.43.64:3333"}
                 goTo="Exchange"
-              />
+              /> */}
             </ScrollView>
           </View>
         )

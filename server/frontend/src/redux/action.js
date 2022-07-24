@@ -1,5 +1,4 @@
-import AVAILABLE from "./messages"
-
+import { AVAILABLE, STATS } from "./messages";
 
 const started = (payload) => {
   return {
@@ -8,4 +7,12 @@ const started = (payload) => {
   };
 };
 
-export default started;
+const stats = (payload) => {
+  return {
+    type: STATS,
+    payload,
+  };
+};
+
+
+export {started, stats};
