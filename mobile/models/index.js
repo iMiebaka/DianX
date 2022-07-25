@@ -1,4 +1,10 @@
-import { initDeviceId } from "./deviceId";
+import db from "./config";
+
+const getDeviceId = db.transaction((tx) => {
+  tx.executeSql(SQL.get.DeviceID, [], (_, { rows }) => {
+    return rows._array[0];
+  });
+});
 
 const create = {
   Devices:
@@ -21,7 +27,7 @@ const get = {
 };
 
 const add = {
-  initDeviceId,
+  initDeviceId: `INSERT INTO deviceIDs (publicId, deviceName) values (?,?)`,
 };
 
 const SQL = {
@@ -33,4 +39,4 @@ const SQL = {
 
 const DEVICE_PRINT = "moblie_device";
 
-export { DEVICE_PRINT, SQL };
+export { DEVICE_PRINT, SQL, db };

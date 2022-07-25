@@ -11,53 +11,59 @@ import React, { useEffect, useState } from "react";
 import ICONS from "../assets/icons";
 import { MessageItem } from "../components";
 import uuid from "react-native-uuid";
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 import { socket } from "../request";
+import { db, SQL } from "../models";
 
 const Exchange = ({ route, navigation }) => {
-  const userDetails = useSelector((state) => state.userDetail);
-
+  // const userDetails = useSelector((state) => state.userDetail);
   const [messageValue, setMessageValue] = useState(""),
+    [userDetails, setUserDetails] = useState({}),
     [messages, setMessages] = useState([]);
   //   { id: uuid.v4(), message: "hsjksdjk", type: "text", from: "self" },
   //   { id: uuid.v4(), message: "sdjkjfk", type: "text", from: "self" },
   //   { id: uuid.v4(), message: "sdjkjfk", type: "text", from: "user" },
   // ]);
+  // console.log(userDetails);
   const messageChange = () => {
     const data = {
       id: uuid.v4(),
       message: messageValue,
       room: route.params.connectionId,
       type: "text",
-      userId: route.params.route,
+      userId: userDetails.publicId,
+      createdOn : new Date()
     };
+    console.log(userDetails);
     socket(route.params.url).emit("receive_text", data);
-    // setMessages([...messages, data]);
     setMessageValue("");
   };
-  // useEffect(() => {
-  //   let mounted = true;
-  //   {
-  //     mounted &&
-  //       socket(route.params.url).on("send_message", (data) => {
-  //         console.log(data);
-  //       });
-  //   }
-  //   return () => {
-  //     mounted = false;
-  //   };
-  // }, [socket]);
+
   useEffect(() => {
     const listener = (message) => {
-      console.log(message);
+      console.log(messages);
+      setMessages((data) => [...data, message]);
+      // console.log(message);
     };
     socket(route.params.url).on("send_message", listener);
 
-    return () => socket.off("send_message", listener);
+    return () => socket(route.params.url).off("send_message", listener);
   }, ["send_message"]);
 
   useEffect(() => {
-    socket(route.params.url).emit("join_room", route.params.connectionId);
+    let mounted = true;
+    {
+      mounted &&
+        socket(route.params.url).emit("join_room", route.params.connectionId);
+      db.transaction((tx) => {
+        tx.executeSql(SQL.get.DeviceID, [], (_, { rows }) => {
+          setUserDetails(rows._array[0]);
+        });
+      });
+    }
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   return (
@@ -67,7 +73,7 @@ const Exchange = ({ route, navigation }) => {
       </View>
       <ScrollView style={styles.messages}>
         {messages.map((item) => {
-          return <MessageItem key={item.id} item={item} user={userDetails} />;
+          return <MessageItem key={uuid.v4()} item={item} user={userDetails} />;
         })}
       </ScrollView>
       <View style={styles.senderZone}>

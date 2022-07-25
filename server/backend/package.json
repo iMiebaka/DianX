@@ -2,7 +2,7 @@
   "name": "dian-server",
   "version": "1.0.0",
   "description": "a desktop severside app for dian file transfer",
-  "main": "nodemon index.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon",
@@ -16,15 +16,24 @@
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
     "network": "^0.6.1",
-    "nodemon": "^2.0.19",
+    "pkg": "^5.8.0",
     "qrcode": "^1.5.1",
     "sequelize": "^6.21.3",
     "socket.io": "^4.5.1",
     "sqlite3": "^5.0.9",
     "uuid": "^8.3.2"
   },
+  "pkg": {
+    "scripts": "build/**/*.js",
+    "assets": "views/**/*",
+    "targets": [
+      "node16-linux-arm64"
+    ],
+    "outputPath": "dist"
+  },
   "devDependencies": {
     "electron": "^19.0.8",
+    "nodemon": "^2.0.19",
     "sequelize-cli": "^6.4.1"
   }
 }

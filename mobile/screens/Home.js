@@ -2,9 +2,6 @@ import React, { useEffect } from "react";
 import { View, StyleSheet } from "react-native";
 import ICONS from "../assets/icons";
 import { HomeButton } from "../components";
-import * as SQLite from "expo-sqlite";
-import { SQL } from "../controllers";
-const db = SQLite.openDatabase("db.testDb");
 
 const Home = ({ navigation }) => {
   useEffect(() => {

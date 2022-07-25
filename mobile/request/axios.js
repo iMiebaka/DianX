@@ -1,5 +1,5 @@
 import axios from "axios";
-import { DEVICE_PRINT } from "../controllers";
+import { DEVICE_PRINT } from "../models";
 
 const api = (url) =>
   axios.create({

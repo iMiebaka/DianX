@@ -1,10 +1,8 @@
 import { combineReducers } from "redux";
-import { getDeviceId } from "../controllers/deviceId";
-import AVAILABLE from "./messages";
+import AVAILABLE from "./types";
 
-const initialState = getDeviceId;
 
-const userDetail = (state = initialState, action) => {
+const userDetail = (state = {}, action) => {
   const { type, payload } = action;
   switch (type) {
     case AVAILABLE:

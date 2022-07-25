@@ -1,13 +1,13 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams, Navigate } from "react-router-dom";
 import { Conversation, MediaSender, Sidebar } from "../components";
 import { useSelector } from "react-redux";
 import { socket, api } from "../request";
 import { v4 } from "uuid";
 import QRCode from "qrcode";
 
-const ExistingDevice = () => {
+const ExistingDevice = ({device}) => {
   const userDetails = useSelector((state) => state.userDetail);
   const [isLoading, setIsLoading] = useState(false),
     // [responsiveToggle, setResponsiveToggle] = useState(false),
@@ -90,7 +90,7 @@ const ExistingDevice = () => {
         userId: userDetails.deviceId,
         room: id,
       };
-      console.log(data_);
+      setConversation((data) => [...data, data_]);
       socket.emit("receive_text", data_);
       // api.post("/send/text", data_).then((res) => {
       //   console.log(res);
@@ -116,7 +116,7 @@ const ExistingDevice = () => {
 
   useEffect(() => {
     const listener = (message) => {
-      console.log(message);
+      setConversation((data) => [...data, message]);
     };
     socket.on("send_message", listener);
 
@@ -141,7 +141,7 @@ const ExistingDevice = () => {
                 >
                   <i className="mdi mdi-arrow-left mdi-36px"></i>
                 </button> */}
-                <Conversation data={conversation} />
+                <Conversation data={conversation} user={userDetails} />
                 {isUploading && (
                   <div className="w-full bg-gray-100">
                     <div

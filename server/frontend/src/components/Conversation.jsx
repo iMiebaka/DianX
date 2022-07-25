@@ -1,9 +1,7 @@
-import React, { useState, useRef } from "react";
 import LeftConversation from "./LeftConversation";
 import RightConversation from "./RightConversation";
 
-const Conversation = () => {
-  const data = ""
+const Conversation = ({ data, user }) => {
   return (
     <div
       className=" bg-gray-100 rounded-t-lg py-2 lg:flex flex-col md:ml-auto w-full md:mt-0 overflow-y-scroll 
@@ -16,13 +14,19 @@ const Conversation = () => {
           src={IMAGE.imageOne}
           alt=""
           srcSet=""
-        />
-      </div> */}
-      <LeftConversation data={data} />
-      <RightConversation data={data} />
-      <RightConversation data={data} />
-      <RightConversation data={data} />
-      <RightConversation data={data} />
+          />
+        </div> */}
+      {data.map((item) => {
+        // item.userId == user.deviceId ?  (
+        // console.log(item.userId == user.deviceId)
+
+        return <LeftConversation key={item.id} data={item} />;
+        // ) :
+        // (
+        //  console.log(item.userId == user.deviceId)
+        // <RightConversation key={item.id} data={item} />
+        // );
+      })}
     </div>
   );
 };

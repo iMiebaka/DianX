@@ -3,9 +3,8 @@ import React, { useState, useEffect } from "react";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import { DeviceMenu, Spinner } from "../components";
 import uuid from "react-native-uuid";
-import * as SQLite from "expo-sqlite";
-import { api, socket } from "../request";
-const db = SQLite.openDatabase("db.testDb");
+import { api } from "../request";
+import { db } from "../models";
 
 const NewUser = ({ navigation }) => {
   const [hasPermission, setHasPermission] = useState(null),
