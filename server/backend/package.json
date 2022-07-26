@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon",
-    "ui": "electron start.js"
+    "start": "electron index.js"
   },
   "author": "Miebaka Iwarri",
   "license": "ISC",
@@ -19,21 +18,13 @@
     "pkg": "^5.8.0",
     "qrcode": "^1.5.1",
     "sequelize": "^6.21.3",
+    "sequelize-cli": "^6.4.1",
     "socket.io": "^4.5.1",
-    "sqlite3": "^5.0.9",
+    "sqlite3": "^5.0.10",
     "uuid": "^8.3.2"
   },
-  "pkg": {
-    "scripts": "build/**/*.js",
-    "assets": "views/**/*",
-    "targets": [
-      "node16-linux-arm64"
-    ],
-    "outputPath": "dist"
-  },
   "devDependencies": {
-    "electron": "^19.0.8",
-    "nodemon": "^2.0.19",
-    "sequelize-cli": "^6.4.1"
+    "electron": "^19.0.9",
+    "nodemon": "^2.0.19"
   }
 }

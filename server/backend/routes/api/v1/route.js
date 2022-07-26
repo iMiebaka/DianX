@@ -19,17 +19,7 @@ router.get(apiEndPointPrefix + "device-details", async (req, res, next) => {
 
 router.get(apiEndPointPrefix + "get-conversation", async (req, res, next) => {
   const deviceId = req.query.deviceid;
-  // const socket = req.app.get("socket");
-  // socket.to("3c933885-2155-4c30-be73-ccb09974c53f").emit("receive_message", {});
   const files = await Files.findAll({ where: { communicationId: deviceId } });
-  // const data = {
-  //   fileType: files.fileType,
-  //   fileName: files.fileName,
-  //   publicId: files.publicId,
-  //   sender: files.sender,
-  //   communicationId: files.communicationId,
-  //   createdAt: files.createdAt,
-  // };
   res.json(files);
 });
 
@@ -96,7 +86,6 @@ router.get(apiEndPointPrefix + "test-socket", async (req, res, next) => {
   try {
     const socket = req.app.get("socket");
     socket.broadcast.emit("send_message", { data: "334acd28-7496-451a-9896-5dbb10310701" });
-    await sequelize.authenticate();
     res.json({ message: "Socket tested" });
   } catch (error) {
     res.status(500).json({ message: "Unable to init socket:", error });

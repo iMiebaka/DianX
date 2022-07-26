@@ -1,58 +1,55 @@
-const express = require("express");
-const app = express();
-var cors = require("cors");
-const server = require("http").createServer(app);
-const io = require("socket.io")(server, {
-  cors: {
-    origin: "*",
-    methods: ["*"],
-  },
+const { app, BrowserWindow } = require("electron");
+const path = require("path");
+const { execSync } = require("child_process");
+
+const server = require("./server");
+// const output = execSync("./index-linux", { encoding: "utf-8" });
+// console.log(output);
+
+
+function createWindow() {
+  const win = new BrowserWindow({
+    width: 1024,
+    height: 800,
+    show: false,
+    webPreferences: {
+      preload: path.join(__dirname, "preload.js"),
+    },
+    icon: path.join(__dirname, "splash/icons8-file-500.png"),
 });
 
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(express.static("dist"));
-app.use(express.static("media"));
+var splash = new BrowserWindow({
+    width: 800,
+    height: 600,
+    transparent: true,
+    frame: false,
+    center: true,
+    icon: path.join(__dirname, "splash/icons8-file-500.png"),
+    // alwaysOnTop: true,
+  });
 
-const PORT = process.env.PORT || 9339;
+  splash.loadFile("splash/index.html");
+  splash.center();
+  //win.removeMenu();
+  win.loadURL("http://localhost:9339");
 
-// Route Setup
-const apiRoutev1 = require("./routes/api/v1/route");
+  setTimeout(function () {
+    splash.close();
+    win.show();
+  }, 5000);
+}
+app.whenReady().then(() => {
+  createWindow();
 
-app.use((req, res, next) => {
-  req.io = io;
-  if (req.url.substring(0, 4) !== "/api") {
-    return res.sendFile(__dirname + "/dist");
+  app.on("activate", () => {
+    if (BrowserWindow.getAllWindows().length === 0) {
+      createWindow();
+    }
+  });
+});
+
+app.on("window-all-closed", () => {
+  if (process.platform !== "darwin") {
+    app.quit();
   }
-  next();
-});
-
-app.use("/api/v1", apiRoutev1);
-
-io.on("connection", (socket) => {
-  app.set("socket", socket);
-
-  socket.on("join_room", (data) => {
-    socket.join(data);
-  });
-
-  socket.on("make_handshake", (data) => {});
-  // socket.on("send_message", (data) => {});
-
-  socket.on("leave_room", (data) => {
-    socket.leave(data);
-  });
-
-  socket.on("receive_text", (data) => {
-    socket.broadcast.emit("send_message", data);
-    // socket.to(data.room).emit("receive_message", data);
-    console.log("message recieved");
-  });
-});
-
-// Server listening to port 3000
-server.listen(PORT, () => {
-  console.log("REST API is Running on", PORT);
-  app.set("LISTENING", PORT);
 });
