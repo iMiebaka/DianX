@@ -1,3 +1,0 @@
-const AVAILABLE = "AVAILABLE";
-const STATS = "STATS";
-export  {AVAILABLE, STATS}

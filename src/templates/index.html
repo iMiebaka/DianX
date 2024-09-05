@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dian FTP</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+      rel="stylesheet"
+    />
+    <style></style>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='/css/style.css')}}"
+    />
+    <!-- <script src=""></script> -->
+  </head>
+  <body>
+    <header>
+      <h1>Dian FTP 📁 | Flask 🌐</h1>
+      <p>Your multi media exchange Side Chick</p>
+    </header>
+    <section>
+      <div id="container"></div>
+    </section>
+
+    <section class="prompt-container">
+      <div>
+        <input style="display: none" type="file" name="" id="file-add" />
+        <button type="button" id="add-file" class="">
+          <img
+            src="{{ url_for('static', filename='/icons/cloud-upload-outline.svg') }}"
+            alt="Translate"
+          />
+        </button>
+        <textarea
+          required
+          class=""
+          placeholder="Your text goes in here..."
+        ></textarea>
+        <button type="button" id="menuBtn" class="">
+          <img
+            src="{{ url_for('static', filename='/icons/send-outline.svg') }}"
+            alt="Translate"
+          />
+        </button>
+      </div>
+      <p id="error-field"></p>
+    </section>
+  </body>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"
+    integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA=="
+    crossorigin="anonymous"
+  ></script>
+  <script src="{{ url_for('static', filename='/js/socket.js')}}"></script>
+  <script src="{{ url_for('static', filename='/js/generics.js')}}"></script>
+</html>

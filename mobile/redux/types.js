@@ -1,2 +1,0 @@
-const AVAILABLE = "AVAILABLE";
-export { AVAILABLE };

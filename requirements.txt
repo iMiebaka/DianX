@@ -1,0 +1,7 @@
+flask
+python-dotenv
+jinja2
+Flask_Cors
+Flask_Migrate
+flask_sqlalchemy
+flask_socketio

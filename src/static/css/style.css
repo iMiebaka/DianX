@@ -1,0 +1,42 @@
+body {
+  font-family: "Poppins", sans-serif;
+  background-color: rgb(34, 34, 34);
+  color: aliceblue;
+}
+header {
+  text-align: center;
+}
+#error-field {
+  font-size: 18px;
+  color: rgb(220, 101, 101);
+  max-width: 720px;
+  margin: 0 auto;
+}
+.prompt-container {
+  position: fixed;
+  bottom: 10px;
+  left: 0;
+  right: 0;
+}
+.prompt-container textarea {
+  width: 100%;
+}
+section #container {
+  max-width: 720px;
+  margin: 0 auto;
+  margin-top: 50px;
+}
+.prompt-container div {
+  display: flex;
+  max-width: 720px;
+  margin: 0 auto;
+  background-color: rgb(53, 53, 53);
+}
+button img {
+  width: 30px;
+}
+
+.content-child {
+  color: whitesmoke;
+  display: block;
+}
