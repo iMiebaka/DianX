@@ -1,6 +1,5 @@
 
 from flask_sqlalchemy import SQLAlchemy
-from flask_cors import CORS
 from flask_migrate import Migrate
 from flask import Flask, render_template, send_from_directory, jsonify, request
 from src import utils as Repo
@@ -16,7 +15,6 @@ db = SQLAlchemy(app)
 socketio = SocketIO(app)
 migrate = Migrate(app=app, db=db, render_as_batch=True)
 
-# CORS(app, resources={r"/api*": {"origins": "*"}})
 from src import socket
 
 
@@ -24,7 +22,6 @@ from src import socket
 def root():
     from src.models import File
     files = File.query.all()
-    print(files)
     return render_template('index.html', files=files)
 
 
@@ -51,7 +48,6 @@ def upload():
 def upload_payload():
     try:
         payload = request.json.get("payload")
-        # print(request.json.get("payload"))
         return jsonify(payload)
     except Exception as ex:
         return jsonify({'message': str(ex)}), 400
