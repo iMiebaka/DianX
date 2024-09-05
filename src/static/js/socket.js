@@ -8,8 +8,6 @@ socket.on("disconnect", (reason, details) => {
 });
 
 socket.on("receive_message", (arg) => {
-  console.log(arg);
-
   if (arg.file_type == "text") {
     const data = arg.data;
     const parent = document.createElement("div");
