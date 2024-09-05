@@ -40,3 +40,16 @@ button img {
   color: whitesmoke;
   display: block;
 }
+
+span .clipboard-img {
+  cursor: pointer;
+}
+.clipboard-img {
+  width: 20px;
+}
+
+
+.text-content-child{
+  display: flex;
+  gap: 10px;
+}
