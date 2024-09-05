@@ -32,11 +32,7 @@ socket.on("receive_message", (arg) => {
 
 async function copyText(text) {
 
-navigator.permissions.query({ name: "write-on-clipboard" }).then((result) => {
-  if (result.state == "granted" || result.state == "prompt") {
-    alert("Write access granted!");
-  }
-});
+
   if (navigator.clipboard) {
     try {
       await navigator.clipboard.writeText(text);
