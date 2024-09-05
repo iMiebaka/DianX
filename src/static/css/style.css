@@ -30,7 +30,6 @@ section #container {
   display: flex;
   max-width: 720px;
   margin: 0 auto;
-  background-color: rgb(53, 53, 53);
 }
 button img {
   width: 30px;
