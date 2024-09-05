@@ -12,8 +12,6 @@ uploadBtn.addEventListener("click", function () {
 
 fileAdd.addEventListener("change", async function (event) {
   const file = event.target.files[0];
-  console.log(file);
-
   const formData = new FormData();
   formData.append("file", file);
 
@@ -27,7 +25,6 @@ fileAdd.addEventListener("change", async function (event) {
     socket.emit("receive_message", { data, file_type: "file" });
     fileAdd.value = "";
   } else {
-    console.log(data);
     errorField.innerText = data.detail;
   }
 });
@@ -42,6 +39,9 @@ inputField.addEventListener("keyup", function () {
 
 menuBtn.setAttribute("disabled", true);
 menuBtn.addEventListener("click", async function () {
+  if (inputField.value == "") {
+    return;
+  }
   // Initialize pending state
   errorField.innerText = "";
   this.setAttribute("disabled", true);
@@ -55,7 +55,7 @@ menuBtn.addEventListener("click", async function () {
     },
     body,
   });
-  
+
   const data = await response.json();
   if (response.ok) {
     socket.emit("receive_message", { data, file_type: "text" });
