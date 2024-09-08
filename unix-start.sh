@@ -4,7 +4,7 @@ if [ ! -d "venv" ]; then
   . venv/bin/activate
   echo "Virtual enviroment created and activated"
 
-  pip install -r requirement.txt
+  pip install -r requirements.txt
   echo "Dependenies installed"
 
 else

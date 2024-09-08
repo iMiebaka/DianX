@@ -19,6 +19,7 @@ socket.on("receive_message", (arg) => {
     parent.appendChild(appendBtn(data));
     parent.appendChild(element);
     containerDisplay.appendChild(parent);
+    copyText(data)
   }
   if (arg.file_type == "file") {
     const element = document.createElement("a");
