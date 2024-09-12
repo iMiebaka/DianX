@@ -6,7 +6,10 @@ if [ ! -d "venv" ]; then
 
   pip install -r requirements.txt
   echo "Dependenies installed"
-
+  flask db migrate
+  flask db upgrade
+  mkdir files
+  
 else
   . venv/bin/activate
 

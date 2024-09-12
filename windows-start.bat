@@ -6,6 +6,11 @@ if not exist "venv" (
 
   pip install -r requirements.txt
   echo Dependencies installed
+  
+  flask db migrate
+  flask db upgrade
+  mkdir files
+  
 ) else (
   call venv\Scripts\activate.bat
 )
