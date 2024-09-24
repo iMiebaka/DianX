@@ -1,6 +1,6 @@
 @echo off
 if not exist "venv" (
-  python3 -m venv venv
+  python -m venv venv
   call venv\Scripts\activate.bat
   echo Virtual environment created and activated
 
